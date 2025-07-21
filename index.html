@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>motorbargh-cal</title>
+
+  <style>
+    /* General Container & Box Styles */
+        .final-gen-calc-container {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100%; 
+            background-color: #f4f7f6;
+            margin: 0; 
+            padding: 20px; 
+            direction: rtl; 
+            text-align: right; 
+            box-sizing: border-box;
+        }
+        .final-gen-calc-inner-box {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 650px;
+            width: 100%;
+            text-align: right; 
+            box-sizing: border-box;
+        }
+        .final-gen-calc-inner-box h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            text-align: center; 
+        }
+
+        /* Appliance Grid Styles */
+        .final-gen-appliance-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column for mobile */
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        @media (min-width: 600px) {
+            .final-gen-appliance-grid {
+                grid-template-columns: 1fr 1fr; /* Two columns for larger screens */
+            }
+        }
+        .final-gen-appliance-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Align items to the right in RTL */
+            background-color: #e9f7ef;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #d4edda;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            box-sizing: border-box;
+        }
+        .final-gen-appliance-item label {
+            margin-bottom: 0;
+            color: #155724;
+            font-weight: normal;
+            flex-grow: 1; /* Allow label to take available space */
+            text-align: right;
+        }
+
+        /* Styles for Custom Quantity Controls */
+        .final-gen-qty-control {
+            display: flex;
+            align-items: center;
+            margin-right: 10px; /* Space between control and label */
+        }
+        .final-gen-qty-control input[type="number"] {
+            width: 50px; /* Smaller width for input as buttons handle interaction */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+            margin: 0 5px; /* Space between input and buttons */
+            direction: ltr; /* Ensure numbers are left-to-right */
+            -moz-appearance: textfield; /* Firefox: Hide default number input arrows */
+        }
+        /* Hide default arrows for number input in Webkit browsers (Chrome, Safari, Edge) */
+        .final-gen-qty-control input[type="number"]::-webkit-outer-spin-button,
+        .final-gen-qty-control input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .final-gen-qty-btn {
+            background-color: #3498db; /* Blue color for buttons */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 1.2em; /* Larger font size for touchability */
+            cursor: pointer;
+            width: 35px; /* Fixed width for buttons */
+            height: 35px; /* Fixed height to make them square */
+            display: flex; /* Use flex to center text */
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s ease;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+        .final-gen-qty-btn:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+        .final-gen-qty-btn:active {
+            background-color: #1a5270; /* Even darker on click */
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3); /* Inset shadow on press */
+        }
+
+        /* Results Display Styles */
+        .final-gen-result {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e6f7ff;
+            border: 1px solid #cce5ff;
+            border-radius: 8px;
+            color: #004085;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: right;
+        }
+        .final-gen-result strong {
+            font-weight: bold; /* Ensure bold is applied */
+            color: #004085; /* Keep the same color for bold text */
+        }
+
+        /* Disclaimer Styles */
+        .final-gen-disclaimer {
+            margin-top: 25px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            text-align: justify;
+            line-height: 1.6;
+        }
+  </style>
+
+  
+</head>
+<body>
+  <div class="final-gen-calc-container">
+  <div class="final-gen-calc-inner-box">
+    <h2>محاسبه توان موتور برق مورد نیاز شما</h2>
+    <div class="final-gen-appliance-grid">
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-light"
+            value="0"
+            min="0"
+            data-base-running="10"
+            data-base-starting="10"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-light">روشنایی (لامپ LED)</label>
+      </div>
+
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-fridge-home-normal"
+            value="0"
+            min="0"
+            data-base-running="150"
+            data-base-starting="1000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-fridge-home-normal"
+          >یخچال/فریزر (معمولی خانگی)</label
+        >
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-fridge-sidebyside"
+            value="0"
+            min="0"
+            data-base-running="200"
+            data-base-starting="1500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-fridge-sidebyside">یخچال ساید بای ساید</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-fridge-freezer-combo"
+            value="0"
+            min="0"
+            data-base-running="180"
+            data-base-starting="1200"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-fridge-freezer-combo">یخچال فریزر (ترکیبی)</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-fridge-twin"
+            value="0"
+            min="0"
+            data-base-running="300"
+            data-base-starting="2000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-fridge-twin">یخچال فریزر دوقلو (هر دو واحد)</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-fridge-hotel"
+            value="0"
+            min="0"
+            data-base-running="80"
+            data-base-starting="500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-fridge-hotel">یخچال هتلی/کوچک</label>
+      </div>
+
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-tv"
+            value="0"
+            min="0"
+            data-base-running="80"
+            data-base-starting="80"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-tv">تلویزیون LED</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-fan"
+            value="0"
+            min="0"
+            data-base-running="75"
+            data-base-starting="75"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-fan">پنکه</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-microwave"
+            value="0"
+            min="0"
+            data-base-running="1500"
+            data-base-starting="1500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-microwave">مایکروویو</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-cooler-ab"
+            value="0"
+            min="0"
+            data-base-running="400"
+            data-base-starting="1200"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-cooler-ab">کولر آبی</label>
+      </div>
+
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-ac-9000"
+            value="0"
+            min="0"
+            data-base-running="900"
+            data-base-starting="2500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-ac-9000">کولر گازی اسپلیت ۹۰۰۰ BTU</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-ac-12000"
+            value="0"
+            min="0"
+            data-base-running="1200"
+            data-base-starting="3500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-ac-12000">کولر گازی اسپلیت ۱۲۰۰۰ BTU</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-ac-18000"
+            value="0"
+            min="0"
+            data-base-running="1800"
+            data-base-starting="5000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-ac-18000">کولر گازی اسپلیت ۱۸۰۰۰ BTU</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-ac-24000"
+            value="0"
+            min="0"
+            data-base-running="2400"
+            data-base-starting="6000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-ac-24000">کولر گازی اسپلیت ۲۴۰۰۰ BTU</label>
+      </div>
+
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-water-pump-1hp"
+            value="0"
+            min="0"
+            data-base-running="750"
+            data-base-starting="2000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-water-pump-1hp">پمپ آب 1 اسب بخار</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-water-pump-2hp"
+            value="0"
+            min="0"
+            data-base-running="1500"
+            data-base-starting="4000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-water-pump-2hp">پمپ آب 2 اسب بخار</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-water-pump-3hp"
+            value="0"
+            min="0"
+            data-base-running="2200"
+            data-base-starting="6000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-water-pump-3hp">پمپ آب 3 اسب بخار</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-water-pump-4hp"
+            value="0"
+            min="0"
+            data-base-running="3000"
+            data-base-starting="8000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-water-pump-4hp">پمپ آب 4 اسب بخار</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-water-pump-5hp"
+            value="0"
+            min="0"
+            data-base-running="3700"
+            data-base-starting="10000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-water-pump-5hp">پمپ آب 5 اسب بخار</label>
+      </div>
+
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-washing-machine"
+            value="0"
+            min="0"
+            data-base-running="1000"
+            data-base-starting="3000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-washing-machine">لباسشویی</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-computer"
+            value="0"
+            min="0"
+            data-base-running="250"
+            data-base-starting="250"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-computer">کامپیوتر رومیزی</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-laptop"
+            value="0"
+            min="0"
+            data-base-running="50"
+            data-base-starting="50"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-laptop">لپ‌تاپ</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-charger"
+            value="0"
+            min="0"
+            data-base-running="10"
+            data-base-starting="10"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-charger">شارژر موبایل</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-water-heater"
+            value="0"
+            min="0"
+            data-base-running="1500"
+            data-base-starting="1500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-water-heater">آبگرمکن برقی</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-hairdryer"
+            value="0"
+            min="0"
+            data-base-running="1500"
+            data-base-starting="1500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-hairdryer">سشوار</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-iron"
+            value="0"
+            min="0"
+            data-base-running="1500"
+            data-base-starting="1500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-iron">اتو بخار</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-electric-stove"
+            value="0"
+            min="0"
+            data-base-running="1500"
+            data-base-starting="1500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-electric-stove">فر/اجاق برقی</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-toaster"
+            value="0"
+            min="0"
+            data-base-running="1000"
+            data-base-starting="1000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-toaster">توستر</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-kettle"
+            value="0"
+            min="0"
+            data-base-running="1500"
+            data-base-starting="1500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-kettle">کتری برقی</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-drill"
+            value="0"
+            min="0"
+            data-base-running="600"
+            data-base-starting="1800"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-drill">دریل</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-submersible-pump"
+            value="0"
+            min="0"
+            data-base-running="750"
+            data-base-starting="2000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-submersible-pump">پمپ کف‌کش</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-grinder"
+            value="0"
+            min="0"
+            data-base-running="800"
+            data-base-starting="2400"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-grinder">دیسک و فرز</label>
+      </div>
+
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-store-fridge-single"
+            value="0"
+            min="0"
+            data-base-running="250"
+            data-base-starting="1200"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-store-fridge-single"
+          >یخچال ایستاده تک درب مغازه</label
+        >
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-store-fridge-double"
+            value="0"
+            min="0"
+            data-base-running="350"
+            data-base-starting="1500"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-store-fridge-double"
+          >یخچال ایستاده دو درب مغازه</label
+        >
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-store-freezer-single"
+            value="0"
+            min="0"
+            data-base-running="200"
+            data-base-starting="1000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-store-freezer-single"
+          >فریزر صندوقی تک درب مغازه</label
+        >
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-store-freezer-double"
+            value="0"
+            min="0"
+            data-base-running="300"
+            data-base-starting="1300"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-store-freezer-double"
+          >فریزر صندوقی دو درب مغازه</label
+        >
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-icecream-fridge"
+            value="0"
+            min="0"
+            data-base-running="200"
+            data-base-starting="1000"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-icecream-fridge">یخچال بستنی</label>
+      </div>
+      <div class="final-gen-appliance-item">
+        <div class="final-gen-qty-control">
+          <button type="button" class="final-gen-qty-btn final-gen-qty-minus">
+            -
+          </button>
+          <input
+            type="number"
+            id="qty-gen-icecream-freezer"
+            value="0"
+            min="0"
+            data-base-running="250"
+            data-base-starting="1200"
+            readonly
+          />
+          <button type="button" class="final-gen-qty-btn final-gen-qty-plus">
+            +
+          </button>
+        </div>
+        <label for="qty-gen-icecream-freezer">فریزر بستنی</label>
+      </div>
+    </div>
+
+    <div class="final-gen-result" id="final-gen-result-display">
+      <p>توان کارکرد مورد نیاز: <strong>۰ وات (۰ کیلووات)</strong></p>
+      <p>حداکثر توان استارت مورد نیاز: <strong>۰ وات (۰ کیلووات)</strong></p>
+      <p>آمپر مورد نیاز (تخمینی): <strong>۰ آمپر</strong></p>
+      <p>
+        موتور برق پیشنهادی شما باید حداقل <strong>۰ وات (کارکرد)</strong> و
+        <strong>۰ وات (استارت)</strong> توان داشته باشد.
+      </p>
+    </div>
+    <p class="final-gen-disclaimer">
+      * این ابزار بر اساس متوسط توان مصرفی وسایل برقی رایج و به صورت تخمینی عمل
+      می‌کند. توان دقیق هر وسیله ممکن است بر اساس مدل، برند و بازدهی متفاوت
+      باشد. برای وسایل موتوری (مانند یخچال، پمپ، کولر گازی)، **توان راه‌اندازی
+      (Surge Wattage)** در لحظه روشن شدن می‌تواند چند برابر توان کارکرد عادی
+      باشد. این محاسبه فرض می‌کند که تنها یکی از وسایل با بالاترین توان
+      راه‌اندازی در یک لحظه شروع به کار می‌کند. ** محاسبه آمپر بر اساس ولتاژ 220
+      ولت (تک فاز) و ضریب توان ایده‌آل (Power Factor) 1 انجام شده است. در
+      واقعیت، ضریب توان کمتر از 1 است که باعث می‌شود جریان (آمپر) واقعی کمی
+      بیشتر باشد. *** برای انتخاب نهایی موتور برق، حتماً با یک متخصص برق یا
+      فروشنده معتبر مشورت کنید، زیرا عواملی مانند نوع موتور برق (بنزینی، دیزلی)،
+      فاز (تک فاز، سه فاز)، کیفیت سیم‌کشی، ارتفاع از سطح دریا و نیاز به توان
+      اضطراری در انتخاب نهایی مؤثرند.
+    </p>
+  </div>
+</div>
+
+
+  <script>
+    (function() {
+            window.addEventListener('load', function() {
+                // Select all quantity control containers
+                const qtyControls = document.querySelectorAll('.final-gen-qty-control');
+                const resultDiv = document.getElementById('final-gen-result-display');
+                const VOLTAGE = 220; // Assuming 220V single-phase for Iran
+
+                function calculateGeneratorPower() {
+                    let totalRunningWatts = 0;
+                    let maxStartingWatts = 0; 
+                    let highestStartingApplianceRunningWattage = 0; 
+
+                    qtyControls.forEach(control => {
+                        const numberInput = control.querySelector('input[type="number"]');
+                        const quantity = parseInt(numberInput.value) || 0; 
+                        
+                        if (quantity > 0) {
+                            const baseRunningWattage = parseFloat(numberInput.dataset.baseRunning);
+                            const baseStartingWattage = parseFloat(numberInput.dataset.baseStarting);
+
+                            const currentApplianceRunningWatts = baseRunningWattage * quantity;
+                            const currentApplianceStartingWatts = baseStartingWattage * quantity;
+
+                            totalRunningWatts += currentApplianceRunningWatts;
+
+                            if (currentApplianceStartingWatts > currentApplianceRunningWatts && currentApplianceStartingWatts > maxStartingWatts) {
+                                maxStartingWatts = currentApplianceStartingWatts;
+                                highestStartingApplianceRunningWattage = currentApplianceRunningWatts; 
+                            }
+                        }
+                    });
+
+                    let finalStartingWattageNeeded = totalRunningWatts;
+                    if (maxStartingWatts > 0) {
+                         finalStartingWattageNeeded = totalRunningWatts - highestStartingApplianceRunningWattage + maxStartingWatts;
+                    }
+
+                    // Convert to kW
+                    const totalRunningKW = (totalRunningWatts / 1000).toFixed(2);
+                    const finalStartingKW = (finalStartingWattageNeeded / 1000).toFixed(2);
+
+                    // Calculate Amps (P = V * I -> I = P / V). Assuming Power Factor of 1 for simplicity.
+                    const estimatedAmps = (totalRunningWatts / VOLTAGE).toFixed(2);
+
+                    if (resultDiv) {
+                        resultDiv.innerHTML = `
+                            <p>توان کارکرد مورد نیاز: <strong>${totalRunningWatts} وات (${totalRunningKW} کیلووات)</strong></p>
+                            <p>حداکثر توان استارت مورد نیاز: <strong>${finalStartingWattageNeeded} وات (${finalStartingKW} کیلووات)</strong></p>
+                            <p>آمپر مورد نیاز (تخمینی): <strong>${estimatedAmps} آمپر</strong></p>
+                            <p>موتور برق پیشنهادی شما باید حداقل <strong>${totalRunningWatts} وات (کارکرد)</strong> و <strong>${finalStartingWattageNeeded} وات (استارت)</strong> توان داشته باشد.</p>
+                        `;
+                    } else {
+                        console.error('Result display element (final-gen-result-display) not found!');
+                    }
+                }
+
+                // Attach event listeners to all plus/minus buttons and the number input itself
+                qtyControls.forEach(control => {
+                    const minusBtn = control.querySelector('.final-gen-qty-minus');
+                    const plusBtn = control.querySelector('.final-gen-qty-plus');
+                    const numberInput = control.querySelector('input[type="number"]');
+
+                    minusBtn.addEventListener('click', () => {
+                        let currentValue = parseInt(numberInput.value) || 0;
+                        if (currentValue > parseInt(numberInput.min)) { // Ensure not less than min (0)
+                            numberInput.value = currentValue - 1;
+                            calculateGeneratorPower(); // Recalculate after change
+                        }
+                    });
+
+                    plusBtn.addEventListener('click', () => {
+                        let currentValue = parseInt(numberInput.value) || 0;
+                        numberInput.value = currentValue + 1;
+                        calculateGeneratorPower(); // Recalculate after change
+                    });
+
+                    // Still listen for direct input/change if readonly is removed or for copy-paste
+                    // This is less common with custom buttons, but good for robustness
+                    numberInput.addEventListener('input', calculateGeneratorPower);
+                    numberInput.addEventListener('change', calculateGeneratorPower);
+                });
+
+                // Initial calculation on load
+                calculateGeneratorPower();
+            });
+        })();
+  </script>
+</body>
+</html>
